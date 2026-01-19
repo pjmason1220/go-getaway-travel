@@ -1,49 +1,91 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 
-// Placeholder Instagram posts - these would typically come from the Instagram API
-// For now, using placeholder images that represent typical vacation rental content
-const placeholderPosts = [
+/**
+ * Instagram Feed Component
+ *
+ * This component displays an Instagram feed using the Behold widget (recommended)
+ * or falls back to a static display with property images.
+ *
+ * SETUP INSTRUCTIONS FOR LIVE INSTAGRAM FEED:
+ *
+ * Option 1: Behold.so (Recommended - Free tier available)
+ * 1. Go to https://behold.so and create a free account
+ * 2. Connect your Instagram account (@go_getaway)
+ * 3. Create a new feed widget
+ * 4. Copy your Feed ID from the widget settings
+ * 5. Replace 'YOUR_BEHOLD_FEED_ID' below with your actual Feed ID
+ *
+ * Option 2: ElfSight (Alternative)
+ * 1. Go to https://elfsight.com/instagram-feed-widget/
+ * 2. Create widget and connect Instagram
+ * 3. Copy the widget code
+ * 4. Replace the Behold script below with ElfSight code
+ *
+ * Option 3: SnapWidget (Alternative - has watermark on free tier)
+ * 1. Go to https://snapwidget.com
+ * 2. Create widget for @go_getaway
+ * 3. Copy embed code and replace below
+ */
+
+// Set to true and add your Behold Feed ID to enable live Instagram feed
+const BEHOLD_ENABLED = false;
+const BEHOLD_FEED_ID = 'YOUR_BEHOLD_FEED_ID'; // Replace with your actual Behold Feed ID
+
+// Fallback images using actual property photos
+const fallbackPosts = [
   {
     id: '1',
-    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80',
-    alt: 'Beautiful lake sunset view',
-    link: 'https://instagram.com/go_getaway',
+    image: '/images/sunset-ridge/hero-deck-lake-view.webp',
+    alt: 'Deck overlooking Lake Cumberland',
   },
   {
     id: '2',
-    image: 'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=400&q=80',
-    alt: 'Cozy deck with lake view',
-    link: 'https://instagram.com/go_getaway',
+    image: '/images/shady-lake-hideaway/fire-pit-night.webp',
+    alt: 'Cozy fire pit at night',
   },
   {
     id: '3',
-    image: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=400&q=80',
-    alt: 'Lakeside cabin exterior',
-    link: 'https://instagram.com/go_getaway',
+    image: '/images/sunset-ridge/sunset-view.webp',
+    alt: 'Sunset over Lake Cumberland',
   },
   {
     id: '4',
-    image: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=400&q=80',
-    alt: 'Comfortable bedroom',
-    link: 'https://instagram.com/go_getaway',
+    image: '/images/shady-lake-hideaway/game-room.webp',
+    alt: 'Game room with pool table',
   },
   {
     id: '5',
-    image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&q=80',
-    alt: 'Modern living room',
-    link: 'https://instagram.com/go_getaway',
+    image: '/images/sunset-ridge/fire-pit.webp',
+    alt: 'Colorful chairs around fire pit',
   },
   {
     id: '6',
-    image: 'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=400&q=80',
-    alt: 'Sunset from the property',
-    link: 'https://instagram.com/go_getaway',
+    image: '/images/shared/lake-cumberland-boat.webp',
+    alt: 'Boating on Lake Cumberland',
   },
 ];
 
 export default function InstagramFeed() {
+  const widgetRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Load Behold widget script if enabled
+    if (BEHOLD_ENABLED && BEHOLD_FEED_ID !== 'YOUR_BEHOLD_FEED_ID') {
+      const script = document.createElement('script');
+      script.src = 'https://w.behold.so/widget.js';
+      script.type = 'module';
+      script.async = true;
+      document.body.appendChild(script);
+
+      return () => {
+        document.body.removeChild(script);
+      };
+    }
+  }, []);
+
   return (
     <section className="py-16 bg-neutral-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -77,39 +119,48 @@ export default function InstagramFeed() {
           </p>
         </div>
 
-        {/* Instagram Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-          {placeholderPosts.map((post) => (
-            <a
-              key={post.id}
-              href={post.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative aspect-square overflow-hidden rounded-lg group"
-            >
-              <Image
-                src={post.image}
-                alt={post.alt}
-                fill
-                className="object-cover group-hover:scale-110 transition-transform duration-300"
-                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 16vw"
-              />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
-                <svg
-                  className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
+        {/* Instagram Feed - Behold Widget or Fallback */}
+        {BEHOLD_ENABLED && BEHOLD_FEED_ID !== 'YOUR_BEHOLD_FEED_ID' ? (
+          <div ref={widgetRef} className="flex justify-center">
+            <behold-widget feed-id={BEHOLD_FEED_ID}></behold-widget>
+          </div>
+        ) : (
+          <>
+            {/* Fallback Grid with Property Images */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+              {fallbackPosts.map((post) => (
+                <a
+                  key={post.id}
+                  href="https://instagram.com/go_getaway"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative aspect-square overflow-hidden rounded-lg group"
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"
-                    clipRule="evenodd"
+                  <Image
+                    src={post.image}
+                    alt={post.alt}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-300"
+                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 16vw"
                   />
-                </svg>
-              </div>
-            </a>
-          ))}
-        </div>
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
+                    <svg
+                      className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </>
+        )}
 
         {/* Follow CTA */}
         <div className="text-center mt-8">
@@ -117,12 +168,35 @@ export default function InstagramFeed() {
             href="https://instagram.com/go_getaway"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-secondary"
+            className="btn-secondary inline-flex items-center gap-2"
           >
-            Follow Us on Instagram
+            <svg
+              className="w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fillRule="evenodd"
+                d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"
+                clipRule="evenodd"
+              />
+            </svg>
+            Follow @go_getaway on Instagram
           </a>
         </div>
       </div>
     </section>
   );
+}
+
+// TypeScript declaration for custom Behold widget element
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'behold-widget': React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLElement> & { 'feed-id': string },
+        HTMLElement
+      >;
+    }
+  }
 }

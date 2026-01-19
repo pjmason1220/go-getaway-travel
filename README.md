@@ -40,22 +40,37 @@ Open [http://localhost:3000](http://localhost:3000) to view the site.
 
 ## Configuration
 
-### Formspree Setup (Required)
+### Formspree Setup (Already Configured)
 
-The contact form uses Formspree for form submissions. To set it up:
+The contact form uses Formspree for form submissions. The form is already configured with endpoint `mwvvbyvl`.
 
-1. Go to [https://formspree.io](https://formspree.io) and create a free account
-2. Create a new form and copy the form ID (e.g., `xpznqwer`)
-3. Edit `src/components/ContactForm.tsx` and replace `YOUR_FORM_ID` with your actual form ID:
+To manage form submissions:
+1. Go to [https://formspree.io](https://formspree.io) and sign in
+2. Access the form dashboard to view submissions
+3. Configure email notifications and auto-reply messages as needed
+
+### Instagram Feed Setup (Optional)
+
+The Instagram feed on the homepage can display live posts from @go_getaway using a third-party widget service. Currently, it shows beautiful property photos as a fallback.
+
+**To enable live Instagram feed with Behold.so:**
+
+1. Go to [https://behold.so](https://behold.so) and create a free account
+2. Connect your Instagram account (@go_getaway)
+3. Create a new feed widget and customize its appearance
+4. Copy your Feed ID from the widget settings
+5. Edit `src/components/InstagramFeed.tsx`:
 
 ```typescript
-const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
+const BEHOLD_ENABLED = true;
+const BEHOLD_FEED_ID = 'your-actual-feed-id';
 ```
 
-4. In Formspree dashboard, configure:
-   - Email notifications to receive submissions
-   - Auto-reply message for users (optional)
-   - Spam protection settings
+**Alternative services:**
+- [ElfSight](https://elfsight.com/instagram-feed-widget/) - Free tier available
+- [SnapWidget](https://snapwidget.com) - Has watermark on free tier
+
+**Note:** Without a live feed configured, the component displays property photos that link to the Instagram profile.
 
 ## Deployment to Vercel
 
@@ -112,17 +127,18 @@ Add these DNS records at your domain registrar:
 
 ## Deployment Checklist
 
-- [ ] Formspree form ID configured in `ContactForm.tsx`
-- [ ] Formspree email notifications set up
-- [ ] Code pushed to GitHub
+- [x] Formspree form ID configured in `ContactForm.tsx`
+- [ ] Formspree email notifications set up in dashboard
+- [x] Code pushed to GitHub
 - [ ] Vercel project created and deployed
-- [ ] Custom domain added in Vercel
+- [ ] Custom domain added in Vercel (gogetaway.travel)
 - [ ] DNS records configured at domain registrar
 - [ ] SSL certificate active (automatic)
 - [ ] Test contact form submission
 - [ ] Test all pages and links
 - [ ] Verify images load correctly
 - [ ] Check mobile responsiveness
+- [ ] (Optional) Instagram feed configured with Behold.so
 
 ## Project Structure
 
