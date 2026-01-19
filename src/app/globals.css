@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-neutral-50 text-neutral-900 antialiased;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-accent-500 rounded-lg hover:bg-accent-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-neutral-700 bg-white border border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+
+  .section-heading {
+    @apply text-3xl md:text-4xl font-display font-bold text-neutral-900;
+  }
+
+  .section-subheading {
+    @apply text-lg text-neutral-600 mt-2;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-lg overflow-hidden transition-shadow duration-300 hover:shadow-xl;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Lightbox animations */
+.lightbox-enter {
+  opacity: 0;
+}
+
+.lightbox-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-in-out;
+}
+
+.lightbox-exit {
+  opacity: 1;
+}
+
+.lightbox-exit-active {
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+}
+
+/* Calendar styles */
+.calendar-day {
+  @apply w-10 h-10 flex items-center justify-center rounded-full text-sm transition-colors;
+}
+
+.calendar-day-available {
+  @apply bg-primary-100 text-primary-800 hover:bg-primary-200 cursor-pointer;
+}
+
+.calendar-day-booked {
+  @apply bg-neutral-200 text-neutral-400 cursor-not-allowed line-through;
+}
+
+.calendar-day-today {
+  @apply ring-2 ring-accent-500;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-neutral-100 rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-neutral-300 rounded-full hover:bg-neutral-400;
+}
+
+/* Image gallery grid */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+}
+
+.gallery-grid > *:first-child {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+/* Star rating */
+.star-rating {
+  @apply inline-flex items-center gap-0.5;
+}
+
+.star-filled {
+  @apply text-amber-400;
+}
+
+.star-empty {
+  @apply text-neutral-300;
+}
