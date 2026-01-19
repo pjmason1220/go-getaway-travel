@@ -145,8 +145,8 @@ export default function Home() {
                 Personal Touch
               </h3>
               <p className="text-neutral-600">
-                We&apos;re local owners who love Lake Cumberland. We&apos;re here to help
-                you plan the perfect getaway with insider tips and responsive support.
+                We&apos;re dedicated owners who love sharing Lake Cumberland with our guests.
+                Count on us for responsive support and helpful recommendations to make your stay memorable.
               </p>
             </div>
           </div>
